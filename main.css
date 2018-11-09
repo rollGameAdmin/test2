@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+}
+
+canvas {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #273336;
+}
+
+h1 {
+    display: block;
+    width: 500px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Squada One', sans-serif;
+    font-size: 50px;
+    color: #273336;
+}
+
+audio {
+    display: none;
+}
