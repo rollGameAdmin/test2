@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    /* background-color: #273336; */
+    background-color: #273336;
 }
 
 canvas {
@@ -8,7 +8,7 @@ canvas {
     margin-left: auto;
     margin-right: auto;
     background-color: #273336;
-    /* display: none; */
+    display: none;
 }
 
 h1 {
@@ -20,7 +20,7 @@ h1 {
     font-family: 'Squada One', sans-serif;
     font-size: 50px;
     color: #273336;
-    /* display: none; */
+    display: none;
 }
 
 audio {

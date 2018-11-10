@@ -1,6 +1,6 @@
-// let img = document.getElementById("comingSoon");
-// img.width = 577;
-// img.height = 148;
+let img = document.getElementById("comingSoon");
+img.width = 577;
+img.height = 148;
 function main() {
 
     let backMusic = document.getElementById('background');
