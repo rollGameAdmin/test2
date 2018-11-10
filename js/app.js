@@ -621,5 +621,5 @@ function main() {
     el.addEventListener("touchstart", handleTouch, false);
 }
 
-$(main);
+// $(main);
 
