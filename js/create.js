@@ -496,8 +496,8 @@ triangles.push(triangles3);
     let deathTrap2 = duplicateForRow(deathTrap1);
     deathTrap2.beginX = rectangle2.getRightX();
     deathTrap2.endX = deathTrap2.beginX + rectangle2.flatSpacing;
-    deathTrap2.beginY = rectangle2.getBottomY() - scale(4);
-    deathTrap2.endY = rectangle2.getBottomY() - scale(4);
+    deathTrap2.beginY = rectangle2.getBottomY() - scale(6);
+    deathTrap2.endY = rectangle2.getBottomY() - scale(6);
     deathTraps.push(deathTrap2);
 //----//
 
