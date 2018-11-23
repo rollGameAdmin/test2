@@ -824,7 +824,6 @@ function main() {
 
         //bounce when pressing spacebar
         if (event.which === 32) {
-            console.log(canBounce);
             if (!global.bouncing && canBounce && !global.celebrate) {
                 global.rectangleLand = false;
                 ball.bounceSpeedY = ball.initialBounceSpeedY;
