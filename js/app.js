@@ -593,7 +593,7 @@ function main() {
                 canBounce = false;
                 // backMusic.pause();
                 // loopCelebration.play();
-                gameSpeed = canvas.width * (gameSpeed + 9)/1305;
+                gameSpeed = canvas.width * (6.1 + 9)/1305;
                 ball.ticksPerFrame = 1;
                 global.changeSpeed = false;
             }
