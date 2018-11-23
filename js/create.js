@@ -1,9 +1,6 @@
-var canvas = document.getElementById("game");
-canvas.width = 1300; //canvas width: 1500px
-canvas.height = 500; //canvs height: 300px
-
-const ballRadius = 35; //radius of Circle
-const gameSpeed = 6; //number of pixels graphics are displaced per anim frame
+//original canvas width: 1300
+const ballRadius = scale(30); //radius of Circle
+let gameSpeed = canvas.width * 6.1/1305; //number of pixels graphics are displaced per anim frame
 let colors = {
     darkGrey: '#273336',
     orange: '#F33B1B',
@@ -22,18 +19,32 @@ let graphics = new Graphics(canvas.getContext("2d")); //holds all graphics rende
 
 let lineLength = canvas.width;
 let beginLineX = 0; 
+let width = scale(5);
+let height;
 //Create new Line object
 let line = new Line({
     c: canvas.getContext("2d"), 
-    beginX: beginLineX - ballRadius*2,
-    beginY: canvas.height - 2, 
-    endX: beginLineX + lineLength, 
-    endY: canvas.height - 2, 
+    beginX: 0,
+    beginY: canvas.height - width/2, 
+    endX: canvas.width, 
+    endY: canvas.height - width/2, 
     color: colors.lightGreen, //orange
-    width: 4, //thickness
+    width: width, //thickness original: 4
+});
+let line2 = new Line({
+    c: canvas.getContext("2d"), 
+    beginX: 0,
+    beginY: canvas.height - line.width/2, 
+    endX: 0, 
+    endY: canvas.height - line.width/2, 
+    color: colors.oceanBlue, //orange
+    width: line.width, //thickness
 });
 let line1 = createArray();
 line1.push(line);
+let lines = createArray();
+lines.push(line2);
+
 
 
 
@@ -45,8 +56,8 @@ let ball = new Sprite({
     src: 'img/ball/ball_spritesheet6.png', 
     width: ballRadius * 2, 
     height: ballRadius * 2, 
-    centerX: line.beginX + ballRadius, 
-    centerY: line.beginY - ballRadius + 2,
+    centerX: line.beginX - scale(300), 
+    centerY: line.beginY - ballRadius - line.width/2,
     ticksPerFrame: 2,
     numColumns: 6,
     lastRowColumns: 6,
@@ -63,51 +74,53 @@ let spaceship1 = new Sprite({
     spriteWidth: 504, 
     spriteHeight: 328, 
     src: 'img/spaceship/spaceship1.png', 
-    width: 495/1.5, 
-    height: 100/1.5, 
+    width: scale(124), 
+    height: scale(25), 
     centerX: line.endX + canvas.width/2, 
-    centerY: canvas.height/6,
+    centerY: canvas.height/8,
     ticksPerFrame: 10,
     numColumns: 1,
     lastRowColumns: 1,
     numRows: 3,
-    speed: gameSpeed + 3.5,
+    speed: gameSpeed + scale(5),
     loop: true,
     reverse: false
 });
 let spaceships = createArray();
 spaceships.push(spaceship1);
 
-//Circle details
-let circleDetails1 = {
-    c: canvas.getContext("2d"), 
-    centerX: line.beginX + 500, 
-    centerY: line.beginY - ballRadius, 
-    radius: ballRadius, 
-    color: colors.darkGrey, //dark grey
-    speed: gameSpeed, 
-    stopForward: line.endX,
-    stopFall: canvas.height - ballRadius / 2 
-}
-//not creating circle object for now
-
+width = scale(214);
+height = scale(65);
 let tunnel = new Pic({
     c: canvas.getContext("2d"), 
     src: 'img/tunnel/tunnel5.png', 
-    width: ballRadius * 2 * 3.567,
-    height: ballRadius * 2 * 1.08,
-    centerX: ball.centerX + ballRadius  * 2 * 3.567/2,
-    centerY: line.beginY - (ballRadius - 2) * 2 * 1.08/2,
+    width: width,
+    height: height,
+    centerX: line.beginX + scale(50),
+    centerY: line.beginY - height/2,
     speed: gameSpeed
 });
 let tunnelRow = createArray();
 tunnelRow.push(tunnel);
 
+width = spaceship1.width/2;
+height = width;
+let shotShip = new Pic({
+    c: canvas.getContext("2d"), 
+    src: 'img/spaceship/exploded_ship1.png', 
+    width: width,
+    height: height,
+    centerX: 0,
+    centerY: spaceship1.centerY,
+    speed: spaceship1.speed
+});
+
+
 //Triangle Details to be passed into Triangle object constructor (refer to classes.js)
-let beginX = tunnel.getRightX() + 400;  
-let beginY = line.beginY
-let width = 40; 
-let height = 40;
+let beginX = tunnel.getRightX() + scale(400);  //original: + 400
+let beginY = line.beginY - line.width/2;
+width = Math.floor(scale(40)); //original 40
+height = Math.floor(scale(40)); //original 40
 //Create new Triangle object according to triangleDetails1
 let triangle1 = new Triangle({
     c: canvas.getContext("2d"),
@@ -116,12 +129,12 @@ let triangle1 = new Triangle({
     topX: beginX + width / 2, 
     topY: beginY - height,
     endX: beginX + width, 
-    endY: line.beginY, 
+    endY: beginY, 
     width: width,
     height: height,
     color: colors.lightGreen,
-    strokeColor: colors.oceanBlue,
-    strokeWidth: 3,
+    strokeColor: colors.orange,
+    strokeWidth: canvas.width * 3.1/1305, //original 3
     speed: gameSpeed,
     stopForward: line.endX,
     stopFall: line.beginY,
@@ -131,39 +144,37 @@ let triangles1 = createArray();
 triangles1.push(triangle1);
 
 
-
+height = scale(40)
 //Create new Rectangle object according to rectangleDetails1
 let rectangle1 = new Rectangle({
     c: canvas.getContext("2d"), 
-    width: 90, 
-    height: 42,
-    centerX: triangle1.endX + 400, 
-    centerY: line.beginY - 42 / 2,   
+    width: scale(90), //original 90
+    height: height, //original 42
+    centerX: triangle1.endX + scale(400), 
+    centerY: line.beginY - height / 2,   
     color: colors.oceanBlue, 
     strokeColor: colors.lightGreen,
-    strokeWidth: 3.5,
+    strokeWidth: scale(3.5), //original 3.5
     speed: gameSpeed, 
-    flatSpacing: 150,
-    towerSpacing: 30,
-    towerHeightDiff: 25,
+    flatSpacing: scale(160), //original 150
+    towerSpacing: scale(165),
+    towerHeightDiff: scale(-15),
     stopForward: line.endX,
     stopFall: line.beginY
 });
 
 let rectangleRow = createArray();
 rectangleRow.push(rectangle1);
-let rectangleTrail = [];
-// let numRecs = 3;
-// let createdRecs = 1;
-
+let rectangleTrail = createArray();
+width = scale(4);
 let deathTrap1 = new Line({
     c: canvas.getContext("2d"), 
     beginX: 0,
-    beginY: rectangle1.getBottomY(), 
+    beginY: rectangle1.getBottomY() - width/2, 
     endX: 0, 
-    endY: rectangle1.getBottomY(), 
-    color: colors.oceanBlue,
-    width: 5, //thickness
+    endY: rectangle1.getBottomY() - width/2, 
+    color: colors.orange,
+    width: width, //thickness
     speed: gameSpeed
 });
 let deathTraps = createArray();
@@ -173,13 +184,11 @@ let deathTrapTrail = [];
 
 
 //ExplodedBall Details to be passed into Pic object constructor (refer to classes.js)
-let imgWidth = ballRadius * 2; 
-let imgHeight = ballRadius * 2; 
 let explodingBallDetails = {
     c: canvas.getContext("2d"), 
     src: 'img/explode/exploded_lightblue_ball.png', 
-    width: imgWidth,
-    height: imgHeight,
+    width: ball.width,
+    height: ball.height,
     centerX: ball.centerX,
     centerY: ball.centerY 
 }
@@ -188,44 +197,74 @@ let explodedBall = new Pic(explodingBallDetails);
 let exploded = createArray();
 exploded.push(explodedBall);
 
-width = ballRadius * 2 * 1.78;
-height = ballRadius * 2 * .81;
-let filledInTrampo = 'img/trampoline/trampo4.png';
-let trampo1 = new Pic({
+let crownedBallDetails = {
     c: canvas.getContext("2d"), 
-    src: 'img/trampoline/trampo5.png', 
-    width: width,
-    height: height,
-    centerX: rectangle1.centerX + 1250,
-    centerY: line.beginY - height/2 + 10,
-    speed: gameSpeed
+    src: 'img/crowned/crowned1.png', 
+    width: ball.width,
+    height: scale(82.8), //ballRadius * 2 * 1.38
+    centerX: ball.centerX,
+    centerY: ball.centerY 
+}
+let crownedBall = new Pic(crownedBallDetails);
+let crowned = createArray();
+crowned.push(crownedBall);
+
+width = scale(107); //ballRadius * 2 * 1.78
+height = scale(48.6); // ballRadius * 2 * .81
+let trampo1 = new Sprite({
+    c: canvas.getContext("2d"), 
+    spriteWidth: 187, 
+    spriteHeight: 180, 
+    src: 'img/trampoline/trampo_sprite1.png', 
+    width: width, 
+    height: height, 
+    centerX: rectangle1.centerX + scale(1250), //original: 1250
+    centerY: line.beginY - height/2 + scale(10),
+    ticksPerFrame: 0,
+    numColumns: 1,
+    lastRowColumns: 1,
+    numRows: 2,
+    speed: gameSpeed,
+    loop: false,
+    reverse: false
 });
 let trampos = createArray();
 trampos.push(trampo1);
 
+width = ball.loopRadius*2 + ball.width;
+height =  ball.loopRadius*2 + ball.height;
+let loop = new Pic({
+    c: canvas.getContext("2d"), 
+    src: 'img/loop/loop1.png', 
+    width: width,
+    height: height,
+    centerX: 0,
+    centerY: ball.centerY + ball.height/2 - height/2,
+    speed: gameSpeed
+});
+let loops = createArray();
+loops.push(loop);
+
 //Create new Rectangle object according to rectangleDetails1
-width = 3000;
+width = scale(3000); //original: 3000
+height = scale(300); //original: 300
 let rectangleWall = new Rectangle({
     c: canvas.getContext("2d"), 
     width: width, 
-    height: 300,
-    centerX: trampo1.getRightX() + 100 + width/2, 
-    centerY: line.beginY - 300 / 2,  
+    height: height,
+    centerX: trampo1.getRightX() + width/2 + scale(200),
+    centerY: line.beginY - height/2,  
     color: colors.lightGreen, 
     strokeColor: colors.lightGreen,
     speed: gameSpeed, 
-    flatSpacing: 150,
-    towerSpacing: 30,
-    towerHeightDiff: 25,
-    stopForward: line.endX,
-    stopFall: line.beginY
+    flatSpacing: scale,
 });
 let rectangleWalls = createArray();
 rectangleWalls.push(rectangleWall);
 
 
-width = ballRadius * 3.12 * 1.2;
-height = ballRadius * 3.12 * 1.2;
+width = scale(112); // ballRadius * 3.12 * 1.2
+height = scale(112); // ballRadius * 3.12 * 1.2
 let cannon = new Sprite({
     c: canvas.getContext("2d"), 
     spriteWidth: 822, 
@@ -233,8 +272,8 @@ let cannon = new Sprite({
     src: 'img/cannon/cannon_sprite4.png', 
     width: width, 
     height: height, 
-    centerX: rectangleWall.getLeftX() + 2900,
-    centerY: rectangleWall.getTopY() - height/2 + 10,
+    centerX: rectangleWall.getLeftX() + scale(2900), //original: 2900
+    centerY: rectangleWall.getTopY() - height/2 + scale(10),
     ticksPerFrame: 2,
     numRows: 4,
     numColumns: 5,
@@ -246,10 +285,10 @@ let cannonRow = createArray();
 cannonRow.push(cannon);
 
 
-beginX = cannon.getLeftX() + 20;
-beginY = cannon.centerY + 10;
-width = 28;
-height = 28;
+beginX = cannon.getLeftX() + scale(20);
+beginY = cannon.centerY + scale(10); //original: + 10
+width = scale(28); //original 28
+height = scale(28); //original 28
 let dart = new Triangle({
     c: canvas.getContext("2d"),
     beginX: beginX,
@@ -261,8 +300,8 @@ let dart = new Triangle({
     width: width,
     height: height,
     color: colors.lightGreen,
-    strokeColor: colors.oceanBlue,
-    strokeWidth: 3,
+    strokeColor: colors.orange,
+    strokeWidth: canvas.width * 2.9/1305,
     speed: gameSpeed,
     stopForward: line.endX,
     stopFall: line.beginY,
@@ -272,20 +311,45 @@ let dartsToShoot = createArray();
 dartsToShoot.push(dart);
 let shotDarts = [];
 
+let radius = scale(4);
+let enemyAmmo1 = new Circle({
+    c: canvas.getContext("2d"), 
+    centerX: 0, 
+    centerY: 0, 
+    radius: radius, 
+    color: colors.orange,
+    speed: 0, 
+});
+
+width = scale(100);
+height = width * 77/155;
+let flag = new Pic({
+    c: canvas.getContext("2d"), 
+    src: 'img/flag/flag1.png', 
+    width: width,
+    height: height,
+    centerX: 0,
+    centerY: 0,
+    speed: gameSpeed
+});
+let flags = createArray();
+flags.push(flag);
+
+
+
+
 function duplicateForRow(shape) {
     let duplicate;
+    duplicate = Object.assign(Object.create(Object.getPrototypeOf(shape)),shape);
     if (shape instanceof Triangle) {
-        duplicate = Object.assign(Object.create(Object.getPrototypeOf(shape)),shape);
         if (shape.spacing != -1) {
             duplicate.beginX = shape.endX + shape.spacing;
             duplicate.endX = duplicate.beginX + duplicate.width;
             duplicate.topX = duplicate.beginX + duplicate.width/2;
         }
     } else if (shape instanceof Rectangle || shape instanceof Pic) {
-        duplicate = Object.assign(Object.create(Object.getPrototypeOf(shape)),shape);
         duplicate.centerX = shape.centerX + shape.width + shape.flatSpacing;
     } else if (shape instanceof Line) {
-        duplicate = Object.assign(Object.create(Object.getPrototypeOf(shape)),shape);
         duplicate.beginX = shape.getRightX() + rectangle1.width;
         duplicate.endX = duplicate.beginX + rectangle1.flatSpacing;
     }
@@ -332,6 +396,7 @@ function addToRow(row, amount) {
         row.push(copy); 
     }  
 }
+
 function addToTower(row, amount, inverted) {
     if (!inverted) {
         for (let i = 0; i < amount; i++) {
@@ -349,8 +414,8 @@ function addToTower(row, amount, inverted) {
 function repositionDarts(darts) {
     for (let i = 0; i < darts.length; i++) {
         let dart = darts[i];
-        dart.beginX = cannon.getLeftX() + 20;
-        dart.beginY = cannon.centerY + 10;  
+        dart.beginX = cannon.getLeftX() + scale(20);
+        dart.beginY = cannon.centerY + scale(10);  
         dart.topX = dart.beginX + dart.width;
         dart.topY = dart.beginY - dart.height/2;
         dart.endX = dart.beginX + dart.width;
@@ -373,21 +438,17 @@ function repositionTriangle(triangle, beginX, beginY) {
 
 
 
-//triangle row 1
-// addToRow(triangles1, 1);
-//---//
-
 //triangle row 2
 let lastTriRow = triangles1[triangles1.length - 1];
 let triangle2 = duplicateForRow(lastTriRow);
-repositionTriangle(triangle2, lastTriRow.endX + 250, -1);
+repositionTriangle(triangle2, lastTriRow.endX + scale(250), -1);
 let triangles2 = createArray();
 triangles2.push(triangle2);
 addToRow(triangles2, 1);
 //---//
 
 //rectangle1 reposition
-rectangle1.centerX = triangles2[triangles2.length-1].getRightX() + 300;
+rectangle1.centerX = triangles2[triangles2.length-1].getRightX() + scale(400);
 //--//
 
 //array of triangle rows
@@ -416,7 +477,7 @@ addToRow(dartsToShoot, 3);
 /*--Create tris for wall*/
 let triangle3 = duplicateForRow(triangle1);
 repositionTriangle(triangle3,
-                   rectangleWall.getLeftX() + 500,
+                   rectangleWall.getLeftX() + scale(500),
                    rectangleWall.getTopY() - triangle3.strokeWidth);
 let triangles3 = createArray();
 triangles3.push(triangle3);
@@ -426,7 +487,7 @@ triangles.push(triangles3);
 
 /*--Create recs/deathtrap2 for wall */
     let rectangle2 = duplicateForRow(rectangle1);
-    rectangle2.centerX = triangles3[triangles3.lastIndex()].getRightX() + 300;
+    rectangle2.centerX = triangles3[triangles3.lastIndex()].getRightX() + scale(300);
     rectangle2.centerY = rectangleWall.getTopY() - rectangle2.height/2;
     let rectangleRow2 = createArray();
     rectangleRow2.push(rectangle2);
@@ -434,36 +495,74 @@ triangles.push(triangles3);
     let deathTrap2 = duplicateForRow(deathTrap1);
     deathTrap2.beginX = rectangle2.getRightX();
     deathTrap2.endX = deathTrap2.beginX + rectangle2.flatSpacing;
-    deathTrap2.beginY = rectangle2.getBottomY() - 3;
-    deathTrap2.endY = rectangle2.getBottomY() - 3;
+    deathTrap2.beginY = rectangle2.getBottomY() - scale(4);
+    deathTrap2.endY = rectangle2.getBottomY() - scale(4);
     deathTraps.push(deathTrap2);
 //----//
 
-/*--Create tunnel to place after recWall */
-let tunnel2 = duplicateForRow(tunnel);
-tunnel2.centerX = rectangleWall.getRightX() + tunnel2.width/2 + 200;
-tunnelRow.push(tunnel2);
 
 let triangle4 = duplicateForRow(triangle1);
-repositionTriangle(triangle4, tunnel2.getRightX() + 200, canvas.height + triangle4.height + 2);
-triangle4.spacing = 500;
+repositionTriangle(triangle4, rectangleWall.getRightX() + scale(400), canvas.height + triangle4.height + scale(2));
+triangle4.spacing = scale(350);
 let triangleTraps = createArray();
 let triTrapsTrail = createArray();
 let triangles4 = createArray();
 triangles4.push(triangle4);
-addToRow(triangles4, 3);
+addToRow(triangles4, 2);
 for (let i = 0; i < triangles4.length; i++) {
     let trapRow = createArray();
     trapRow.push(triangles4[i])
-    if (i > 0 && i < 3) {
+    if (i == 1) {
         trapRow[0].spacing = 0;
         addToRow(trapRow, 1);
-    } else if (i == 3) {
+    } else if (i == 2) {
         trapRow[0].spacing = 0;
         addToRow(trapRow, 2);
     }
     triangleTraps.push(trapRow);
 }
+
+//position loop according to last triangle
+line2.beginX = triangles4[triangles4.lastIndex()].getRightX() + scale(400);
+loop.centerX = line2.beginX + scale(200) + loop.width/2;
+line2.endX = loop.getRightX() + scale(200);
+
+let rectangleRow3 = createArray();
+let rectangle3 = duplicateForRow(rectangle1);
+rectangle3.centerX = line2.endX + scale(800);
+rectangleRow3.push(rectangle3);
+addToTower(rectangleRow3, 3, false);
+let lastRec3 = rectangleRow3[rectangleRow3.lastIndex()];
+lastRec3.centerX = lastRec3.getLeftX() + scale(3000/2);
+lastRec3.width = scale(3000);
+let line3 = duplicateForRow(line2);
+line3.color = colors.orange;
+line3.beginX = rectangle3.getRightX();
+line3.endX = lastRec3.getRightX();
+lines.push(line3);
+flag.centerY = lastRec3.getTopY() - flag.height/2 - scale(10);
+flag.centerX = lastRec3.getLeftX() + scale(400);
+flag.initialCenterX = flag.centerX;
+
+spaceship2 = duplicateForRow(spaceship1);
+spaceship2.centerY = spaceship1.getBottomY() + spaceship1.height/2 + scale(10);
+spaceship2.centerX = spaceship2.centerX + scale(60);
+spaceship2.speed = spaceship1.speed - scale(1);
+spaceships.push(spaceship2);
+
+enemyShip1 = duplicateForRow(spaceship1);
+enemyShip1.image = new Image();
+enemyShip1.image.src = 'img/spaceship/enemy_ship1.png';
+enemyShip1.centerX = spaceship1.getRightX() + enemyShip1.width/2 + scale(1000);
+spaceships.push(enemyShip1);
+
+enemyAmmo1.centerX = enemyShip1.getLeftX() + scale(20);
+enemyAmmo1.centerY = enemyShip1.getBottomY() - enemyAmmo1.radius - 1;
+enemyAmmo1.speed = enemyShip1.speed;
+let enemyAmmo = createArray();
+enemyAmmo.push(enemyAmmo1);
+addToRow(enemyAmmo, 3);
+let enemyAmmoShot = createArray();
 
 
 
@@ -474,12 +573,37 @@ let explode = new sound("sounds/explode1.mp3");
 let bigBounce = new sound("sounds/big-bounce1.mp3");
 let wallLand = new sound("sounds/wall-land2.mp3");
 let falling = new sound("sounds/fall1.mp3");
+let loopCelebration = new sound("sounds/celebrate3.mp3");
+let loopSound = new sound("sounds/loop1.mp3");
+let celebration = new sound("sounds/celebrate1.mp3");
 
 graphics.pushMultToArray([
+    tunnelRow,
+    triangles,
+    triangleTrail,
+    deathTraps,
+    deathTrapTrail,
+    rectangleRow,
+    rectangleTrail,
+    rectangleRow2,
+    rectangleRow3,
+    dartsToShoot,
+    cannonRow,
+    trampos,
+    rectangleWalls,
+    triangleTraps,
+    triTrapsTrail,
+    lines,
+    loops,
+    flags
+]);
+
+graphics.pushMultToRender([
     line1,
     ball1,
     tunnelRow,
     triangles,
+    triangleTraps,
     triangleTrail,
     deathTraps,
     deathTrapTrail,
@@ -490,34 +614,13 @@ graphics.pushMultToArray([
     cannonRow,
     trampos,
     rectangleWalls,
+    lines,
     triangleTraps,
-    triTrapsTrail
+    triTrapsTrail,
+    loops,
+    enemyAmmo,
+    enemyAmmoShot,
+    spaceships,
+    rectangleRow3,
+    flags
 ]);
-
-graphics.pushMultToRender([
-    line1,
-    ball1,
-    tunnelRow,
-    // spaceships,
-    triangles,
-    triangleTraps,
-    triangleTrail,
-    deathTraps,
-    deathTrapTrail,
-    rectangleRow,
-    rectangleTrail,
-    dartsToShoot,
-    cannonRow,
-    trampos,
-    rectangleWalls,
-    triangleTraps,
-    triTrapsTrail
-]);
-
-
-
-
-
-//creates a pyramid
-// addToRow(rectangleRow, 2, false, false);
-// addToRow(rectangleRow, 5, false, true);

@@ -6,14 +6,38 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Game</title>
     <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Passion+One" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Passion+One|Squada+One" rel="stylesheet">
 </head>
 <body>
-    <h1>Press Space Bar To Start!</h1>
-    <img  id = "comingSoon" src="img/coming_soon.png" alt="Browser doesn't support image.">
-    <canvas id="game"></canvas>
+    <h1 id = 'rotate'> Rotate or Enlarge Screen. </h1> 
+    <div class = "container" id = "container">
+        <canvas id="game"></canvas>
+        <h1 id = "score-counter">0</h1> 
+        <h1 id = "bounce-instruction">Use Space Bar or Touch Screen to Bounce!</h1>
+        <div class = "screen" id = "screen">
+                <p id = "instruction">
+                        Press start to roll!
+                </p>
+                <button id = "start">
+                    START
+                </button>
+                <p id = "score"></p>
+                <div id = "restart">
+                    <img id = "restartButton" src="img/restart/restart_button2.png" alt="restart button">
+                </div>
+                <p id = "shortcut"> Shortcut: Spacebar </p>
+        </div>
+        <div id = "sound-controls">
+            <div id = "music">
+                    <img id = "musicButton" src="img/sounds/music_button2.png" alt="music button">
+                    <p id = "m">Shortcut: M Key</p>
+            </div>
+            <div id = "sounds">
+                    <img id = "soundsButton" src="img/sounds/sounds_button2.png" alt="sounds button">
+                    <p id = "s">Shortcut: S Key</p>
+            </div>
+        </div>
+    </div>
     <audio src="sounds/background1.mp3" id="background" loop>
         Your browser doesn't support audio.
     </audio>  

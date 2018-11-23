@@ -1,3 +1,28 @@
+//original width was 1300px
+var canvas = document.getElementById("game");
+canvas.width = canvas.offsetWidth;
+canvas.height =  canvas.width/2.3;
+if (canvas.width < 500) {
+    document.getElementById('container').style.display = 'none';
+    let changed = false;
+    refresh();
+    function refresh() {
+        let refreshReq = window.requestAnimationFrame(refresh);
+        if (window.innerWidth > 500 && !changed) {
+            let rotate = document.getElementById('rotate');
+            rotate.innerHTML = 'Refresh.';
+            rotate.style.display = 'block';
+            changed = true;
+        } else if (changed) {
+            window.cancelAnimationFrame(refreshReq);
+        }
+    }
+}
+function scale(px) {
+    return Math.floor(canvas.width * px/1305);
+}
+
+
 class Graphic {
     constructor(details) {
         this.c = details.c; //canvas context for cing
@@ -6,19 +31,25 @@ class Graphic {
         this.initialCenterX = this.centerX; //initial x-coordinate of center
         this.initialCenterY = this.centerY; //initial y-coordinate of center
         this.speed = details.speed; //amount of displacement per animation frame
-        this.bounceSpeedY = 7.2; //displacement of centerY when calling bounce()
-        this.initialBounceSpeedY = 7.2; //initial displacement of centerY when calling bounce()
-        this.deceleration = .37; //number to subtract from bounceSpeedY when calling bounce()
-        this.bounceSpeedX = 5; //displacement of centerX when calling bounceForward() and bounceBack()
-        this.forwardDeceleration = .5; //number to subtract from bounceSpeedY when calling bounceForward()
-        this.backDeceleration = .5; //number to subtract from bounceSpeedY when calling bounceBack()
+        this.bounceSpeedY = canvas.width * 7.2/1305; //displacement of centerY when calling bounce() original: 7.2
+        this.initialBounceSpeedY = this.bounceSpeedY; //initial displacement of centerY when calling bounce()
+        this.deceleration = canvas.width * .37/1305; //number to subtract from bounceSpeedY when calling bounce() original: .37
+        this.bounceSpeedX = scale(5); //displacement of centerX when calling bounceForward() and bounceBack() original: 5
+        this.forwardDeceleration = canvas.width * .5/1305; //number to subtract from bounceSpeedY when calling bounceForward() original: .5
+        this.backDeceleration = canvas.width * .5/1305; //number to subtract from bounceSpeedY when calling bounceBack() original = .5
         this.stopForward = details.stopForward; //x-coordinate where roll should stop
         this.stopFall = details.stopFall; //y-coordinate where fall should stop
         this.falling = false; //boolean to record whether or not circle is falling
         this.fallSpeedY = 0;
-        this.fallDeceleration = .8;
-        this.storeSpeed = 6;
+        this.fallDeceleration = scale(3); //original .8
+        this.storeSpeed = scale(6); //original 6
         this.spacing = details.spacing;
+        this.initialAngle = -Math.PI/2;
+        this.angle = this.initialAngle;
+        this.rotationRate = .1; //original .1
+        this.loopRadius = scale(100); //original 100
+        this.axisX =  this.centerX - (Math.cos(-Math.PI/2) * this.loopRadius);
+        this.axisY =  this.centerY + (Math.sin(-Math.PI/2) * this.loopRadius);
     }
 
     //Add render method when you create class for a new shape :)
@@ -26,12 +57,15 @@ class Graphic {
     //moves graphic forward
     forward() {
         this.centerX += this.speed;
-  
     }
 
     //moves graphic backwards
-    back() {
-        this.centerX -= this.speed;
+    back(gameSpeed) {
+        if (gameSpeed == -1) {
+            this.centerX -= this.speed;
+        } else {
+            this.centerX -= gameSpeed
+        }
     }
 
     //bounces graphic straight up
@@ -54,8 +88,11 @@ class Graphic {
         this.centerX -= this.bounceSpeedX;
     }
 
-    rotate(rotationRate) {
-        this.c.rotate(rotationRate);
+
+    loopIt() {
+        this.centerY = this.axisY - (Math.sin(this.angle) * this.loopRadius);
+        this.centerX = this.axisX + (Math.cos(this.angle) * this.loopRadius);;
+        this.angle += this.rotationRate;
     }
 
     moveDown(amount) {
@@ -98,6 +135,8 @@ class Circle extends Graphic {
         super(details);
         this.color = details.color;
         this.radius = details.radius;
+        this.width = this.radius*2;
+        this.height = this.radius*2;
         this.startAngle = 0; //start angle for cing in canvas
         this.endAngle = Math.PI * 2; //end angle for cing in canvas
     }
@@ -227,7 +266,7 @@ class Line {
         this.endX = details.endX; //x-coordinate to end cing line
         this.endY = details.endY; //y-coordinate to end cing line
         this.color = details.color; //color of line
-        this.lineWidth = details.width; //width of line
+        this.width = details.width; //width of line
         this.speed = details.speed;
     }
 
@@ -237,15 +276,15 @@ class Line {
         this.c.moveTo(this.beginX,this.beginY);
         this.c.lineTo(this.endX,this.endY);
         this.c.strokeStyle = this.color;
-        this.c.lineWidth = this.lineWidth;
+        this.c.lineWidth = this.width;
         this.c.stroke();
         this.c.closePath();
     }
 
     //moves graphic backwards
-    back() {
-        this.beginX -= this.speed;
-        this.endX -= this.speed;
+    back(gameSpeed) {
+        this.beginX -= gameSpeed;
+        this.endX -= gameSpeed;
     }
 
     moveDown(amount) {
@@ -333,6 +372,10 @@ class Graphics {
         }
     }
 
+    unshift(row) {
+        this.toRender.unshift(row);
+    }
+
     push(rowToAdd) {
         this.toRender.push(rowToAdd);
     }
@@ -391,28 +434,23 @@ class Graphics {
     //rollsBack specified graphics according to those found in graphicsToRollBack array
     backGraphics(graphicsToBack) {
         for (let i = 0; i < graphicsToBack.length; i++) {
-                graphicsToBack[i].back();
+                graphicsToBack[i].back(gameSpeed);
         }
     }
 
-    backAll() {
-        let i;
-        if (this.array[1] == ball1) {
-            i = 2;
-        } else {
-            i = 1;
-        }
+    backAll(gameSpeed) {
+        let i = 0;
         while (i < this.array.length) {
             let row = this.array[i];
             if (!(row[0] instanceof Array)) {
                 for (let j = 0; j < row.length; j++) {
-                    row[j].back();
+                    row[j].back(gameSpeed);
                 }
             } else {
                 for (let j = 0; j < row.length; j++) {
                     let subRow = row[j];
                     for (let k = 0; k < subRow.length; k++) {
-                        subRow[k].back();
+                        subRow[k].back(gameSpeed);
                     }
                 }
             }
@@ -422,8 +460,8 @@ class Graphics {
 
     downAll(rate) {
         let i = 1;
-        while (i < this.array.length - 2) {
-            let row = this.array[i];
+        while (i < this.toRender.length - 9) {
+            let row = this.toRender[i];
             if (!(row[0] instanceof Array)) {
                 for (let j = 0; j < row.length; j++) {
                     row[j].moveDown(rate);
@@ -464,7 +502,7 @@ class Sprite extends Graphic {
         this.centerY = details.centerY,
         this.columnIndex = 0;
         this.frameIndex = 0;
-        this.tickCount = 1;
+        this.tickCount = 0;
         this.ticksPerFrame = details.ticksPerFrame;
         this.numColumns = details.numColumns;
         this.lastRowColumns = details.lastRowColumns;
@@ -491,7 +529,7 @@ class Sprite extends Graphic {
     }
 
     update() {
-        this.tickCount++;
+        this.tickCount += 1;
         if (this.tickCount > this.ticksPerFrame) {
 
             this.tickCount = 1;
@@ -590,13 +628,21 @@ class Sprite extends Graphic {
         return land;
     }
 
-    hitOnGround(graphic) {
+    hitOnGround(graphic, onWall) {
         let graphicLeftX = graphic.getLeftX();
         let graphicRightX = graphic.getRightX();
-
-        let hit = this.centerX >= graphicLeftX &&
+        let hit;
+        if (!onWall) {
+             hit = this.centerX >= graphicLeftX &&
                   this.centerX <= graphicRightX &&
-                  this.centerY == this.initialCenterY;
+                  this.centerY == this.initialCenterY &&
+                  graphic.centerY >= line.beginY - graphic.height;
+        } else {
+            hit = this.centerX >= graphicLeftX &&
+                  this.centerX <= graphicRightX &&
+                  this.centerY == this.initialCenterY &&
+                  graphic.centerY == rectangleWall.getTopY() - graphic.height/2;
+        }
         return hit;
     }
 
@@ -608,18 +654,8 @@ class Sprite extends Graphic {
 
         let on = this.centerY >= graphicTopY - this.height/2 &&
                 thisLeftX >= graphicLeftX &&
-                thisLeftX <= graphicRightX + 5;
+                thisLeftX <= graphicRightX + scale(100);
         return on;
-    }
-
-    deathTrapLand(first, last, bouncing) {
-        let firstRightX = first.getRightX();
-        let lastLeftX = last.getLeftX();
-        let thisLeftX = this.getLeftX();
-        let thisRightX = this.getRightX();
-        let deathLand = thisLeftX >= firstRightX &&
-                    thisRightX <= lastLeftX && !bouncing;
-        return deathLand;
     }
 
     deathTri(tris) {
@@ -630,17 +666,16 @@ class Sprite extends Graphic {
         let topY = firstTri.getTopY();
         
         let thisLeftX = this.getLeftX();
-        let thisBottomY = this.getBottomY();
+        let thisTopY = this.getTopY();
 
         let deathLand = this.centerX >= leftX &&
                         thisLeftX <= rightX &&
-                        this.centerY == this.initialCenterY;
+                        this.centerY >= topY;
         return deathLand;
     }
 
     passed(graphic) {
-        let graphicRightX = graphic.getRightX();
-        let passed = this.centerX - this.width/2 >= graphicRightX;
+        let passed = this.getLeftX() >= graphic.getRightX();
         return passed;
     }
 
@@ -649,14 +684,31 @@ class Sprite extends Graphic {
         let tunnelRightX = tunnel.getRightX();
         let thisLeftX = this.getLeftX();
         let thisRightX = this.getRightX();
-        let through = thisLeftX >= tunnelLeftX - 100 &&
-                      thisRightX <= tunnelRightX + 75 &&
+        let through = thisLeftX >= tunnelLeftX - scale(100) &&
+                      thisRightX <= tunnelRightX + scale(75) &&
                       this.centerY == this.initialCenterY;
         return through;
     }
 
     changeSrc(src) {
         this.image.src = src;
+    }
+}
+
+class Text {
+    constructor(details) {
+        this.c = details.c;
+        this.text = details.text;
+        this.font = details.font;
+        this.x = details.x;
+        this.y = details.y;
+        this.color = details.color;
+    }
+
+    render() {
+        this.c.font = this.font;
+        this.c.fillStyle = this.color;
+        this.c.fillText(this.text, this.x, this.y);
     }
 }
 
