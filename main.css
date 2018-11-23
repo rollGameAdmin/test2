@@ -21,7 +21,6 @@ h1 {
     font-family: 'Squada One', sans-serif;
     font-size: 2vw;
     color: #00F69F;
-    /* border: 1px solid black; */
 }
 
 #bounce-instruction {
@@ -61,7 +60,7 @@ canvas {
     right:0;
     margin: auto;
     width: 20%;
-    height: 30%;
+    height: 23%;
     background-color: #00F69F;
     border-radius: 1vw;
     border: .23vw solid #0090FF;
@@ -69,7 +68,7 @@ canvas {
 
 #restart {
     display: none;
-    width: 32%;
+    width: 28%;
     margin-left: auto;
     margin-right: auto;
     background-color: Transparent;
@@ -93,7 +92,7 @@ canvas {
     margin-left: auto;
     margin-right: auto;
     background-color: #00F69F;
-    border-radius: 8px;
+    border-radius: .4vw;
     border: .15vw solid #0090FF;
     cursor: pointer;
     font-size: 1.8vw;
@@ -109,7 +108,7 @@ canvas {
 
 #score {
     display: none;
-    margin-top: 4%; 
+    margin-top: -1%; 
     color: #0090FF;
     font-size: 2vw;
     text-align: center;
@@ -120,7 +119,7 @@ canvas {
     margin-left: auto;
     margin-right: auto;
     width: 70%;
-    margin-top: 6%; 
+    margin-top: 4%; 
     color: #0090FF;
     font-size: 1.7vw;
     text-align: center;
@@ -132,7 +131,7 @@ canvas {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 2%;
+    margin-top: 3%;
     color: #0090FF;
     font-size: 1.2vw;
     cursor: default;
@@ -147,7 +146,6 @@ canvas {
     right: 1%;
     width: 16%;
     text-align: center;
-    /* border: 1px solid black; */
 }
 
 
@@ -194,11 +192,11 @@ button:focus {
 
 @media screen and (max-width: 900px) {
     #screen {
-        height: 10vw;
+        height: 8vw;
     }
     .container {
         width: 100%;
-        margin-top: 0px;
+        margin-top: 0;
     }
 }
 
