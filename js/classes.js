@@ -2,24 +2,28 @@
 var canvas = document.getElementById("game");
 canvas.width = canvas.offsetWidth;
 canvas.height =  canvas.width/2.3;
+let changed = false;
 if (canvas.width < 500) {
     document.getElementById('container').style.display = 'none';
-    let changed = false;
     refresh();
-    function refresh() {
-        let refreshReq = window.requestAnimationFrame(refresh);
-        if (window.innerWidth > 500 && !changed) {
-            let rotate = document.getElementById('rotate');
-            rotate.innerHTML = 'Refresh.';
-            rotate.style.display = 'block';
-            changed = true;
-        } else if (changed) {
-            window.cancelAnimationFrame(refreshReq);
-        }
-    }
 }
+
 function scale(px) {
     return Math.floor(canvas.width * px/1305);
+}
+function refresh() {
+    window.requestAnimationFrame(refresh);
+    if (window.innerWidth > 500 && !changed) {
+        let rotate = document.getElementById('rotate');
+        rotate.innerHTML = 'Refresh.';
+        rotate.style.display = 'block';
+        changed = true;
+    } else if (window.innerWidth < 500 && changed) {
+        let rotate = document.getElementById('rotate');
+        rotate.innerHTML = 'Rotate or Enlarge Screen.';
+        rotate.style.display = 'block';
+        changed = false;
+    }
 }
 
 

@@ -185,8 +185,11 @@ button:focus {
 
 #rotate {
     display: none;
-    margin-top: 30%;
+    margin-top: 10%;
     font-size: 10vw;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media screen and (max-width: 900px) {

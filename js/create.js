@@ -187,7 +187,7 @@ let deathTrapTrail = [];
 //ExplodedBall Details to be passed into Pic object constructor (refer to classes.js)
 let explodingBallDetails = {
     c: canvas.getContext("2d"), 
-    src: 'img/explode/exploded_lightblue_ball.png', 
+    src: 'img/explode/exploded_orange_ball.png', 
     width: ball.width,
     height: ball.height,
     centerX: ball.centerX,
@@ -494,10 +494,11 @@ triangles.push(triangles3);
     rectangleRow2.push(rectangle2);
     addToRow(rectangleRow2, 1);
     let deathTrap2 = duplicateForRow(deathTrap1);
+    deathTrap2.width = scale(5);
     deathTrap2.beginX = rectangle2.getRightX();
     deathTrap2.endX = deathTrap2.beginX + rectangle2.flatSpacing;
-    deathTrap2.beginY = rectangle2.getBottomY() - scale(6);
-    deathTrap2.endY = rectangle2.getBottomY() - scale(6);
+    deathTrap2.beginY = rectangle2.getBottomY() - scale(4);
+    deathTrap2.endY = rectangle2.getBottomY() - scale(4);
     deathTraps.push(deathTrap2);
 //----//
 

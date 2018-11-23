@@ -4,6 +4,8 @@ function main() {
 
     let global = {
         startTime: 0,
+        time: 0,
+        elapsed: 0,
         bouncing: false,
         rotating: false,
         deathLand: false,
@@ -42,9 +44,9 @@ function main() {
         bounceSoundPlayed: false,
         playBounceSound: true,
         changedCanBounce: false,
-        toggleMusicOff: false,
-        toggleSoundsOff: false,
-        soundsOn: false,
+        toggleMusicOff: true,
+        toggleSoundsOff: true,
+        soundsOn: true,
         canFall: true,
         onWall: false,
         shipShowing: false,
@@ -66,6 +68,7 @@ function main() {
         inBetweenRecs: false,
         score: 0
     }
+
 
     let renderReq = 0;
     function renderGraphics() {
@@ -128,7 +131,7 @@ function main() {
         shootShipReq = window.requestAnimationFrame(shootShip);
         if (enemyAmmo.length > 0 && 
             enemyAmmoShot[enemyAmmoShot.lastIndex()].getRightX() < enemyShip1.getLeftX() - scale(20)) {
-            enemyAmmo[0].speed = enemyShip1.speed + scale(6);
+            enemyAmmo[0].speed = canvas.width * (11.1 + 6)/1305;
             enemyAmmoShot.push(enemyAmmo.shift());
         }
         if (enemyAmmoShot[0].getLeftX() < spaceship1.getRightX() && !global.shotShip) {
@@ -172,7 +175,7 @@ function main() {
                 }
                 if (spaceship1.getRightX() < canvas.width
                     && !global.enemyShot) {
-                    enemyAmmo1.speed = enemyShip1.speed + scale(6);
+                    enemyAmmo1.speed =  canvas.width * (11.1 + 6)/1305;
                     enemyAmmoShot.push(enemyAmmo.shift());
                     shootShip();
                     global.enemyShot = true;
@@ -188,15 +191,19 @@ function main() {
         }  
     }
 
+    function timer() {
+        global.time = Date.now() - global.startTime;
+        global.elapsed = Math.floor(global.time / 100) / 10;
+    }
+
     let updateScoreReq = 0;
     let scoreCount = document.getElementById('score-counter');
     function updateScore() {
         updateScoreReq = window.requestAnimationFrame(updateScore);
-        let distanceMoved = Math.abs(flag.centerX - flag.initialCenterX);
-        let newScore = distanceMoved | 0;
+        let newScore = global.elapsed * 100 | 0;
         global.score = newScore;
         scoreCount.innerHTML = '' + newScore;
-    } 
+    }
 
     let moveDownReq = 0;
     function moveDownAll() {
@@ -663,6 +670,9 @@ function main() {
             explodedBall.centerY = ball.centerY;
             crownedBall.centerX = ball.centerX - scale(3);
             crownedBall.centerY = ball.centerY - scale(13);
+            // if (global.soundsOn) {
+            //     goodLuck.play();
+            // }
             begin();
             showShips();
             trackPassedFlags();
@@ -774,7 +784,11 @@ function main() {
         document.getElementById('score').style.display = 'block';
         document.getElementById('restart').style.display = 'block';
         $('#shortcut').text('Shortcut: R Key');
-        global.startTime = Math.floor(Date.now() / 1000);
+        global.startTime = Date.now();
+        window.setInterval(timer, 100);
+        if (global.toggleMusicOff) {
+            backMusic.play();
+        }
         updateScore();
         beginGame();
         global.rotating = true;
