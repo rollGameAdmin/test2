@@ -725,6 +725,7 @@ function sound(src) {
     this.pause = function(){
         this.sound.pause();
     }
+    this.sound.volume = .05;
 }
 
 function createArray() {
