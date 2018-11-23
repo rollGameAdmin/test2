@@ -13,17 +13,12 @@ function scale(px) {
     return Math.floor(canvas.width * px/1305);
 }
 function refresh() {
-    window.requestAnimationFrame(refresh);
-    if (window.innerWidth > 500 && !changed) {
-        let rotate = document.getElementById('rotate');
-        rotate.innerHTML = 'Refresh.';
-        rotate.style.display = 'block';
+    let refreshReq = window.requestAnimationFrame(refresh);
+    if (window.innerWidth > 500 && !changed) {;
+        location.reload();
         changed = true;
-    } else if (window.innerWidth < 500 && changed) {
-        let rotate = document.getElementById('rotate');
-        rotate.innerHTML = 'Rotate or Enlarge Screen.';
-        rotate.style.display = 'block';
-        changed = false;
+    } else if (changed) {
+        window.cancelAnimationFrame(refreshReq);
     }
 }
 
