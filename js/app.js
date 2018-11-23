@@ -545,7 +545,7 @@ function main() {
             global.onWall = ball.stillOnGraphic(rectangleWall);
             global.passedWall = ball.passed(rectangleWall);
             if (global.passedWall) {
-                ball.initialCenterY = canvas.height - ball.height/2;
+                ball.initialCenterY = line.beginY - ball.height/2 - line.width/2;
             }
             if (global.onWall) {
                 if (global.passedWall && global.canFall) {
