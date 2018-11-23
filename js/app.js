@@ -663,9 +663,6 @@ function main() {
             explodedBall.centerY = ball.centerY;
             crownedBall.centerX = ball.centerX - scale(3);
             crownedBall.centerY = ball.centerY - scale(13);
-            if (global.soundsOn) {
-                goodLuck.play();
-            }
             begin();
             showShips();
             trackPassedFlags();
