@@ -5,6 +5,7 @@ canvas.height =  canvas.width/2.3;
 let changed = false;
 if (canvas.width < 500) {
     document.getElementById('container').style.display = 'none';
+    document.getElementById('credits').style.display = 'none';
     refresh();
 }
 

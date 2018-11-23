@@ -5,7 +5,7 @@ body {
 }
 
 .container {
-    margin-top: 6%;
+    /* margin-top: 6%; */
     position: relative;
     display: block;
     margin-left: auto;
@@ -190,6 +190,17 @@ button:focus {
     margin-right: auto;
 }
 
+#credits {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: right;
+    color: #00F69F;
+    margin-top: 6%;
+    width: 87%;
+    font-size: 1.3vw;
+}
+
 @media screen and (max-width: 900px) {
     #screen {
         height: 8vw;
@@ -197,6 +208,11 @@ button:focus {
     .container {
         width: 100%;
         margin-top: 0;
+    }
+
+    #credits {
+        margin-top: 0;
+        width: 100%;
     }
 }
 
@@ -207,5 +223,9 @@ button:focus {
     
     #rotate {
         display: block;
+    }
+
+    #credits {
+        display: none;
     }
 }
