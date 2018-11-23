@@ -83,7 +83,7 @@ let spaceship1 = new Sprite({
     numColumns: 1,
     lastRowColumns: 1,
     numRows: 3,
-    speed: gameSpeed + scale(5),
+    speed: canvas.width * (6.1 + 5)/1305,
     loop: true,
     reverse: false
 });
