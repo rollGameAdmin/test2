@@ -1,6 +1,7 @@
 //original canvas width: 1300
 const ballRadius = scale(30); //radius of Circle
 let gameSpeed = canvas.width * 6.1/1305; //number of pixels graphics are displaced per anim frame
+const initialGameSpeed = gameSpeed;
 let colors = {
     darkGrey: '#273336',
     orange: '#F33B1B',

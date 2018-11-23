@@ -87,14 +87,14 @@ function main() {
     }
 
     function shootFirstDart() {
-        dartsToShoot[0].speed = gameSpeed + scale(4);
+        dartsToShoot[0].speed = canvas.width * 10/1305;
     }
 
     let shootDartsReq = 0;
     function shootDarts() {
         shootDartsReq = window.requestAnimationFrame(shootDarts);
         if ((dartsToShoot[global.dartNum-1].endX <= cannon.getLeftX()- scale(350)) && global.dartNum < dartsToShoot.length) {
-            dartsToShoot[global.dartNum].speed = gameSpeed + scale(4);
+            dartsToShoot[global.dartNum].speed = canvas.width * 10/1305;
             global.dartNum++;
         } else if (global.dartNum == dartsToShoot.length) {
             window.cancelAnimationFrame(shootDartsReq);
@@ -593,7 +593,7 @@ function main() {
                 canBounce = false;
                 // backMusic.pause();
                 // loopCelebration.play();
-                gameSpeed += scale(9);
+                gameSpeed = canvas.width * (gameSpeed + 9)/1305;
                 ball.ticksPerFrame = 1;
                 global.changeSpeed = false;
             }
@@ -611,7 +611,7 @@ function main() {
             }
             if (ball.centerX >= line2.endX) {
                 if (global.changeSpeedLast) {
-                    gameSpeed -= scale(8);
+                    gameSpeed = initialGameSpeed;
                     global.changeSpeedLast = false;
                     ball.ticksPerFrame = 2;
                     canBounce = true;
