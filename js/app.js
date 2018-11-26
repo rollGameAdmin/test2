@@ -601,9 +601,15 @@ function main() {
             }
         }
         //---//
+        if (ball.getLeftX() < line2.endX + scale(100)) {
+            if (ball.centerX >= line2.beginX - scale(300) && ball.getLeftX() <= line2.endX) {
+                canBounce = false;
+            } else {
+                canBounce = true;
+            }
+        }
         if (ball.centerX >= line2.beginX) {
             if (global.changeSpeed) {
-                canBounce = false;
                 // backMusic.pause();
                 // loopCelebration.play();
                 gameSpeed = canvas.width * (6.1 + 9)/1305;
@@ -649,7 +655,6 @@ function main() {
                 if (global.soundsOn) {
                     celebration.play();
                 }
-                canBounce = true;
                 ball.initialBounceSpeedY = scale(7);
                 celebrate();
                 document.getElementById('score').innerHTML = 'Score: ' + global.score;
