@@ -36,6 +36,7 @@ function main() {
         addedWall: false,
         addedDarts: false,
         onWall: false,
+        hitWall: false,
         shotDarts: false,
         cannonRepo: false,
         hitTri: false,
@@ -539,6 +540,11 @@ function main() {
 
             if (global.deathLand) {
                 endGame(-1, ball.initialCenterY + ballRadius);         
+            }
+
+            global.hitWall = ball.hitOnGround(rectangleWall, global.onWall);
+            if (global.hitWall) {
+                endGame(-1,-1);
             }
 
         } else {
