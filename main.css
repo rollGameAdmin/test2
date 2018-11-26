@@ -5,7 +5,7 @@ body {
 }
 
 .container {
-    /* margin-top: 6%; */
+    margin-top: -1%;
     position: relative;
     display: block;
     margin-left: auto;
@@ -40,7 +40,6 @@ audio {
 }
 
 canvas {
-    /* position: absolute; */
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -196,7 +195,7 @@ button:focus {
     margin-right: auto;
     text-align: right;
     color: #00F69F;
-    margin-top: 6%;
+    margin-top: 4%;
     width: 87%;
     font-size: 1.3vw;
 }
