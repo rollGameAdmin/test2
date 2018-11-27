@@ -67,6 +67,10 @@ function main() {
         shotShip: false,
         removedShotShip: false,
         inBetweenRecs: false,
+        showUfo: false,
+        deployedFirst: false,
+        deployed: false,
+        addedDeployed: false,
         score: 0
     }
 
@@ -258,6 +262,35 @@ function main() {
         }
     }
 
+    let showUfosReq = 0;
+    function showUfos() {
+        showUfosReq = window.requestAnimationFrame(showUfos);
+        if (enemyUfo.getRightX() > scale(-100)) {
+            enemyUfo.back(enemyUfo.speed);
+            for (let i = 0; i < ufoAmmo.length; i++) {
+                ufoAmmo[i].back(enemyUfo.speed);
+            }
+        }
+    }
+
+    let deployAmmoReq = 0;
+    function deployUfoAmmo() {
+        deployAmmoReq = window.requestAnimationFrame(deployUfoAmmo);
+        if (ufoAmmo[0].getBottomY() < lastRec3.getTopY() - ufoAmmo1.height/2) {
+            ufoAmmo[0].fall();
+        } else {
+            window.cancelAnimationFrame(deployAmmoReq);
+            ufoAmmo[0].centerY = lastRec3.getTopY() - ufoAmmo1.height/2;
+            ufoAmmo[0].height += scale(27);
+            ufoAmmo[0].width = ufoAmmo[0].height;
+            ufoAmmo[0].image.width = ufoAmmo[0].height;
+            ufoAmmo[0].image.height = ufoAmmo[0].height;
+            ufoAmmo[0].centerY = lastRec3.getTopY() - ufoAmmo[0].height/2;
+            deployedAmmo.push(ufoAmmo.shift());
+            global.deployed = false;
+        }
+    }
+
     let celebrateReq = 0;
     function celebrate() {
         celebrateReq = window.requestAnimationFrame(celebrate);
@@ -267,6 +300,7 @@ function main() {
             bounce();
         }
     }
+
 
     let manageRowsReq = 0;
     function manageRows() {
@@ -417,7 +451,6 @@ function main() {
                 dart.endX >= ball.getLeftX() &&
                 ball.centerY >= dart.topY) {
                     endGame(-1, -1);
-                    dartsToShoot[global.dartsIndex].color = colors.oceanBlue;
                 }
             }
 
@@ -632,6 +665,42 @@ function main() {
             animateShip();
             global.shipAnimated = true;
         }
+
+        //deploy Ufo Ammo after showing Ufo
+            if (ball.getRightX() > lastRec3.getLeftX() - scale(400) && !global.showUfo) {
+                showUfos();
+                global.showUfo = true;
+            }
+            if (enemyUfo.getLeftX() < canvas.width + scale(500) &&
+                !global.deployedFirst) {
+                deployUfoAmmo();
+                global.deployedFirst = true;
+            } else if (deployedAmmo.length == 0 && ufoAmmo.length > 1 &&
+                    ufoAmmo[0].getLeftX() > ufoAmmo[1].getRightX() + scale(150) &&
+                    !global.deployed) {
+                deployUfoAmmo();
+                global.deployed = true;
+            } else if (ufoAmmo.length > 0 && deployedAmmo.length > 0 &&
+                        deployedAmmo[deployedAmmo.lastIndex()].getLeftX() > ufoAmmo[0].getRightX() + scale(150) &&
+                        !global.deployed) {
+                deployUfoAmmo();
+                global.deployed = true;
+            }
+
+            let hitUfoAmmo = false;
+            if (deployedAmmo.length > 0) {
+                hitUfoAmmo = ball.hitAmmo(deployedAmmo[deployedAmmo.lastIndex()]);
+            }
+            if (hitUfoAmmo) {
+                endGame(-1,-1);
+            }
+
+            if (deployedAmmo.length > 0) {
+                if (ball.getLeftX() > deployedAmmo[deployedAmmo.lastIndex()].getRightX()) {
+                    ufoAmmoTrail.push(deployedAmmo.pop());
+                }
+            }
+        //
     }
 
     let beginGameReq = 0;
@@ -729,9 +798,9 @@ function main() {
     function fall() {
         fallReq = window.requestAnimationFrame(fall);
         if ((!global.onWall || global.passedWall) &&
-            ball.centerY < line.beginY - ball.height/2 - line.width/2) {
+            ball.getBottomY() < line.beginY - ball.height/2 - line.width/2) {
             ball.fall();
-        } else if (ball.centerY < rectangleWall.getTopY() - ball.height/2) {
+        } else if (ball.getBottomY() < rectangleWall.getTopY() - ball.height/2) {
             ball.fall();
         } else if (global.inBetweenRecs) {
             ball.fall();

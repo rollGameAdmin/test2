@@ -139,6 +139,8 @@ class Circle extends Graphic {
         this.height = this.radius*2;
         this.startAngle = 0; //start angle for cing in canvas
         this.endAngle = Math.PI * 2; //end angle for cing in canvas
+        this.strokeColor = details.strokeColor;
+        this.strokeWidth = details.strokeWidth;
     }
 
     //cs circle according at it's center location
@@ -146,6 +148,9 @@ class Circle extends Graphic {
         this.c.beginPath();
         this.c.arc(this.centerX, this.centerY, this.radius, this.startAngle, this.endAngle);
         this.c.fillStyle = this.color;
+        this.c.strokeStyle = this.strokeColor;
+        this.c.lineWidth = this.strokeWidth;
+        this.c.stroke();
         this.c.fill();
         this.c.closePath();
     }
@@ -313,7 +318,8 @@ class Pic extends Graphic {
     constructor(details) {
         super(details);
         this.image = new Image(); //image object
-        this.image.src = details.src; //img src
+        this.src = details.src;
+        this.image.src = this.src; //img src
         this.image.width = details.width; //img width
         this.image.height = details.height; //img height
         this.width = details.width; //pic width
@@ -460,7 +466,7 @@ class Graphics {
 
     downAll(rate) {
         let i = 1;
-        while (i < this.toRender.length - 9) {
+        while (i < this.toRender.length - 13) {
             let row = this.toRender[i];
             if (!(row[0] instanceof Array)) {
                 for (let j = 0; j < row.length; j++) {
@@ -643,6 +649,13 @@ class Sprite extends Graphic {
                   this.centerY == this.initialCenterY &&
                   graphic.centerY == rectangleWall.getTopY() - graphic.height/2;
         }
+        return hit;
+    }
+
+    hitAmmo(ammo) {
+        let hit = this.centerX >= ammo.getLeftX() &&
+              this.centerX <= ammo.getRightX() &&
+              this.centerY >= ammo.getTopY();
         return hit;
     }
 

@@ -319,8 +319,41 @@ let enemyAmmo1 = new Circle({
     centerY: 0, 
     radius: radius, 
     color: colors.orange,
+    strokeColor: colors.orange,
+    strokeWidth: 0,
     speed: 0, 
 });
+
+width = (ballRadius * 285/100) * 1.2;
+height = (ballRadius * 87/100) * 1.2;
+let enemyUfo = new Pic({
+    c: canvas.getContext("2d"), 
+    src: 'img/ufo/enemy_ufo1.png', 
+    width: width,
+    height: height,
+    centerX: 0,
+    centerY: 0,
+    speed: canvas.width * (6.1 + 5)/1305
+});
+let ufos = createArray();
+ufos.push(enemyUfo);
+
+width = (enemyUfo.width * 84/285)/1.2;
+height = width;
+let ufoAmmo1 = new Pic({
+    c: canvas.getContext("2d"), 
+    src: 'img/ufo/ufo_ammo2.png', 
+    width: width,
+    height: height,
+    centerX: 0,
+    centerY: 0,
+    speed: enemyUfo.speed
+});
+let ufoAmmo = createArray();
+let deployedAmmo = createArray();
+let ufoAmmoTrail = createArray();
+ufoAmmo.push(ufoAmmo1);
+
 
 width = scale(100);
 height = width * 77/155;
@@ -348,11 +381,16 @@ function duplicateForRow(shape) {
             duplicate.endX = duplicate.beginX + duplicate.width;
             duplicate.topX = duplicate.beginX + duplicate.width/2;
         }
-    } else if (shape instanceof Rectangle || shape instanceof Pic) {
+    } else if (shape instanceof Rectangle) {
         duplicate.centerX = shape.centerX + shape.width + shape.flatSpacing;
     } else if (shape instanceof Line) {
         duplicate.beginX = shape.getRightX() + rectangle1.width;
         duplicate.endX = duplicate.beginX + rectangle1.flatSpacing;
+    } else if (shape instanceof Pic) {
+        duplicate.image = new Image();
+        duplicate.image.src = duplicate.src;
+        duplicate.image.width = duplicate.width;
+        duplicate.image.height = duplicate.height;
     }
     return duplicate;
 }
@@ -504,8 +542,8 @@ triangles.push(triangles3);
 
 
 let triangle4 = duplicateForRow(triangle1);
-repositionTriangle(triangle4, rectangleWall.getRightX() + scale(400), canvas.height + triangle4.height + scale(2));
-triangle4.spacing = scale(350);
+repositionTriangle(triangle4, rectangleWall.getRightX() + scale(300), canvas.height + triangle4.height + scale(2));
+triangle4.spacing = scale(300);
 let triangleTraps = createArray();
 let triTrapsTrail = createArray();
 let triangles4 = createArray();
@@ -531,7 +569,7 @@ line2.endX = loop.getRightX() + scale(200);
 
 let rectangleRow3 = createArray();
 let rectangle3 = duplicateForRow(rectangle1);
-rectangle3.centerX = line2.endX + scale(800);
+rectangle3.centerX = line2.endX + scale(500);
 rectangleRow3.push(rectangle3);
 addToTower(rectangleRow3, 3, false);
 let lastRec3 = rectangleRow3[rectangleRow3.lastIndex()];
@@ -543,7 +581,7 @@ line3.beginX = rectangle3.getRightX();
 line3.endX = lastRec3.getRightX();
 lines.push(line3);
 flag.centerY = lastRec3.getTopY() - flag.height/2 - scale(10);
-flag.centerX = lastRec3.getLeftX() + scale(400);
+flag.centerX = lastRec3.getLeftX() + scale(1800);
 flag.initialCenterX = flag.centerX;
 
 spaceship2 = duplicateForRow(spaceship1);
@@ -565,6 +603,13 @@ let enemyAmmo = createArray();
 enemyAmmo.push(enemyAmmo1);
 addToRow(enemyAmmo, 3);
 let enemyAmmoShot = createArray();
+
+enemyUfo.centerX = line.endX + enemyUfo.width + scale(900);
+enemyUfo.centerY = lastRec3.getTopY() - scale(300);
+ufoAmmo1.centerX = enemyUfo.centerX;
+ufoAmmo1.centerY = enemyUfo.centerY;
+ufoAmmo1.fallDeceleration = scale(6);
+addToRow(ufoAmmo,2);
 
 
 
@@ -597,7 +642,9 @@ graphics.pushMultToArray([
     triTrapsTrail,
     lines,
     loops,
-    flags
+    flags,
+    deployedAmmo,
+    ufoAmmoTrail
 ]);
 
 graphics.pushMultToRender([
@@ -624,5 +671,10 @@ graphics.pushMultToRender([
     enemyAmmoShot,
     spaceships,
     rectangleRow3,
-    flags
+    flags,
+    ufoAmmo,
+    ufos,
+    deployedAmmo,
+    ufoAmmoTrail
 ]);
+document.getElementById('screen').style.display = 'none';
