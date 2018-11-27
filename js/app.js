@@ -268,42 +268,6 @@ function main() {
         }
     }
 
-    let walkReq = 0;
-    function walk() {
-        walkReq = window.requestAnimationFrame(walk);
-        // character1.forward();
-        if (character1.getLeftX() < tunnel.getRightX() + scale(100)) {
-            if (character1.frameIndex == 1) {
-                character1.forward();
-            }
-            character1.update();
-        } else if (character1.frameIndex != 0) {
-            character1.update();
-        } else if (!global.bentKnees) {
-            character2.centerX = character1.centerX;
-            character2.centerY = character2.centerY;
-            characters.splice(0,1);
-            characters.unshift(character2);
-            character2.update();
-            global.bentKnees = true;
-        } else if (character2.bounceSpeedY > 0) {
-            character2.bounce();
-        } else if (!global.replacedCharacter) {
-            global.rotating = false;
-            graphics.remove(characters);
-            graphics.unshift(ball1);
-            global.replacedCharacter = true;
-            ball.centerX = character2.centerX;
-            ball.centerY = character2.getBottomY() - character2.height/2.33; //place ball right above legs
-        } else if (!global.calledFall) {
-            fall();
-            global.calledFall = true;
-        } else if (ball.centerY == ball.initialCenterY && !global.rotating) {
-            global.rotating = true;
-            rotateBall();
-        }
-    }
-
     let manageRowsReq = 0;
     function manageRows() {
         manageRowsReq = window.requestAnimationFrame(manageRows);

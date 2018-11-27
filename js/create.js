@@ -270,7 +270,7 @@ let cannon = new Sprite({
     c: canvas.getContext("2d"), 
     spriteWidth: 822, 
     spriteHeight: 657, 
-    src: 'img/cannon/cannon_sprite4.png', 
+    src: 'img/cannon/cannon_sprite.png', 
     width: width, 
     height: height, 
     centerX: rectangleWall.getLeftX() + scale(2900), //original: 2900
