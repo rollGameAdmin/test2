@@ -645,17 +645,9 @@ class Sprite extends Graphic {
         let graphicLeftX = graphic.getLeftX();
         let graphicRightX = graphic.getRightX();
         let hit;
-        if (!onWall) {
-             hit = this.centerX >= graphicLeftX &&
-                  this.centerX <= graphicRightX &&
-                  this.centerY == this.initialCenterY &&
-                  graphic.centerY >= line.beginY - graphic.height;
-        } else {
-            hit = this.centerX >= graphicLeftX &&
-                  this.centerX <= graphicRightX &&
-                  this.centerY == this.initialCenterY &&
-                  graphic.centerY == rectangleWall.getTopY() - graphic.height/2;
-        }
+        hit = this.centerX >= graphicLeftX &&
+                this.centerX <= graphicRightX &&
+                this.centerY >= graphic.getTopY();
         return hit;
     }
 

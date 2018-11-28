@@ -71,7 +71,9 @@ function main() {
         deployedFirst: false,
         deployed: false,
         addedDeployed: false,
-        score: 0
+        score: 0,
+        canBounce: false,
+        movingDown: true
     }
 
 
@@ -221,7 +223,8 @@ function main() {
             explodedBall.centerY = ball.initialCenterY;
             global.rectangleTopY = rectangleRow[0].getTopY();
             global.wallLand = false;
-            canBounce = true;
+            global.canBounce = true;
+            global.movingDown = false;
         }
     }
 
@@ -490,8 +493,9 @@ function main() {
                 if (global.soundsOn) {
                     wallLand.play();
                 }
-                canBounce = false;
+                global.canBounce = false;
                 global.onWall = true;
+                global.movingDown = true;
                 moveDownAll();
             }
         }   
@@ -551,8 +555,10 @@ function main() {
             }
 
         } else {
-            global.onWall = ball.stillOnGraphic(rectangleWall);
             global.passedWall = ball.passed(rectangleWall);
+            if (!global.passedWall) {
+                global.onWall = ball.stillOnGraphic(rectangleWall);
+            }
             if (global.passedWall) {
                 ball.initialCenterY = line.beginY - ball.height/2 - line.width/2;
             }
@@ -596,19 +602,19 @@ function main() {
         if (tunnelRow.length > 0) {
             global.inTunnel = ball.throughTunnel(tunnelRow[0]);
             if (global.inTunnel) {
-                canBounce = false;
+                global.canBounce = false;
             } else {
-                if (tunnelRow[0] != tunnel && !global.gameEnd) {
-                    canBounce = true;
+                if (tunnelRow[0] != tunnel && !global.gameEnd && !global.movingDown) {
+                    global.canBounce = true;
                 }
             }
         }
         //---//
         if (ball.getLeftX() < line2.endX + scale(100)) {
             if (ball.centerX >= line2.beginX - scale(300) && ball.getLeftX() <= line2.endX) {
-                canBounce = false;
-            } else {
-                canBounce = true;
+                global.canBounce = false;
+            } else if (!global.gameEnd && !global.movingDown) {
+                global.canBounce = true;
             }
         }
         if (ball.centerX >= line2.beginX) {
@@ -636,7 +642,9 @@ function main() {
                     gameSpeed = initialGameSpeed;
                     global.changeSpeedLast = false;
                     ball.ticksPerFrame = 2;
-                    canBounce = true;
+                    if (!global.gameEnd && !global.movingDown) {
+                        global.canBounce = true;
+                    }
                 }
             }
             if (ball.getLeftX() >= flag.getRightX() + scale(100)) {
@@ -736,7 +744,7 @@ function main() {
             trackPassedFlags();
             trackLandFlags();
             manageRows();
-            canBounce = true;
+            global.canBounce = true;
             shot = true;
         }
     }
@@ -862,6 +870,7 @@ function main() {
         window.cancelAnimationFrame(rotateReq);
         window.cancelAnimationFrame(manageRowsReq);
         window.cancelAnimationFrame(updateScoreReq);
+        
         if (explodedX != -1) {
             explodedBall.centerX = explodedX;
         }
@@ -869,7 +878,7 @@ function main() {
             explodedBall.centerY = explodedY;
         }
         global.gameEnd = true;
-        canBounce = false;
+        global.canBounce = false;
         if (global.soundsOn) {
             explode.play();
         }
@@ -879,8 +888,8 @@ function main() {
     }
 
 
-    // let start = false;
-    let canBounce = false;
+    // // let start = false;
+    // let canBounce = false;
     $('html').on('keydown', function (event) {
         /*
             Key Codes:
@@ -893,7 +902,7 @@ function main() {
 
         //bounce when pressing spacebar
         if (event.which === 32) {
-            if (!global.bouncing && canBounce && !global.celebrate) {
+            if (!global.bouncing && global.canBounce && !global.celebrate) {
                 global.rectangleLand = false;
                 ball.bounceSpeedY = ball.initialBounceSpeedY;
                 bounce();
@@ -941,7 +950,7 @@ function main() {
             startGame();
             global.start = true;
         }
-        if (!global.bouncing && canBounce) {
+        if (!global.bouncing && global.canBounce) {
             global.rectangleLand = false;
             ball.bounceSpeedY = ball.initialBounceSpeedY;
             bounce();
