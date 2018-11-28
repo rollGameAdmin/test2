@@ -943,7 +943,7 @@ function main() {
 
     $('html').on('keyup', function (event) {
         if (event.which === 32) {
-            if (!global.movingDown) {
+            if (!global.movingDown && !global.gameEnd) {
                 global.canBounce = true;
             }
         }
