@@ -715,5 +715,3 @@ graphics.pushMultToDown([
     cannonRow,
     rectangleWalls
 ]);
-
-document.getElementById('screen').style.display = 'none';
