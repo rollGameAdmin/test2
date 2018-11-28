@@ -276,19 +276,25 @@ function main() {
     let deployAmmoReq = 0;
     function deployUfoAmmo() {
         deployAmmoReq = window.requestAnimationFrame(deployUfoAmmo);
-        if (ufoAmmo[0].getBottomY() < lastRec3.getTopY() - ufoAmmo1.height/2) {
+        if (ufoAmmo[0].getBottomY() < lastRec3.getTopY()) {
             ufoAmmo[0].fall();
         } else {
             window.cancelAnimationFrame(deployAmmoReq);
-            ufoAmmo[0].centerY = lastRec3.getTopY() - ufoAmmo1.height/2;
-            ufoAmmo[0].height += scale(27);
+            ufoAmmo[0].centerY = lastRec3.getTopY();
+            ufoAmmo[0].height += scale(60);
             ufoAmmo[0].width = ufoAmmo[0].height;
             ufoAmmo[0].image.width = ufoAmmo[0].height;
             ufoAmmo[0].image.height = ufoAmmo[0].height;
-            ufoAmmo[0].centerY = lastRec3.getTopY() - ufoAmmo[0].height/2;
+            ufoAmmo[0].centerY = lastRec3.getTopY();
             deployedAmmo.push(ufoAmmo.shift());
             global.deployed = false;
         }
+    }
+
+    let runExplosionReq = 0;
+    function runExplosion() {
+        runExplosionReq = window.requestAnimationFrame(runExplosion);
+        explosion1.update();
     }
 
     let celebrateReq = 0;
@@ -432,7 +438,7 @@ function main() {
         }
 
 
-        if (Math.abs((cannon.getLeftX()) - (ball.getRightX()) <= scale(3200)) &&
+        if (Math.abs((cannon.getLeftX()) - (ball.getRightX()) <= scale(2800)) &&
             !global.shotDarts) {
             shootFirstDart();
             shootDarts();
@@ -667,7 +673,7 @@ function main() {
         }
 
         //deploy Ufo Ammo after showing Ufo
-            if (ball.getRightX() > lastRec3.getLeftX() - scale(400) && !global.showUfo) {
+            if (ball.getRightX() > lastRec3.getLeftX() - scale(800) && !global.showUfo) {
                 showUfos();
                 global.showUfo = true;
             }
@@ -692,7 +698,15 @@ function main() {
                 hitUfoAmmo = ball.hitAmmo(deployedAmmo[deployedAmmo.lastIndex()]);
             }
             if (hitUfoAmmo) {
+                explosion1.centerX = deployedAmmo[deployedAmmo.lastIndex()].centerX;
+                explosion1.centerY = lastRec3.getTopY() - explosion1.height/2;
+                graphics.push(explosions);
+                deployedAmmo.pop();
+                detonation.play();
+                runExplosion();
+                global.soundsOn = false;
                 endGame(-1,-1);
+                graphics.remove(exploded);
             }
 
             if (deployedAmmo.length > 0) {

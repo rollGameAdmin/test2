@@ -345,8 +345,9 @@ class Pic extends Graphic {
 class Graphics {
     constructor(context) {
         this.c = context;
-        this.array = []; //array to contain all of the graphics of type graphic in the canvas
+        this.toBack = []; //array to contain all of the graphics of type graphic in the canvas
         this.toRender = [];
+        this.toDown = [];
     }
     //cs each graphic in the array according to their ordering
     render() {
@@ -368,13 +369,25 @@ class Graphics {
         }
     }
     //adds new graphic to the graphics array
-    pushToArray(rowToAdd) {
-        this.array.push(rowToAdd);
+    pushToBack(rowToAdd) {
+        this.toBack.push(rowToAdd);
     }
 
-    pushMultToArray(rowsToAdd) {
+    pushMultToBack(rowsToAdd) {
         for (let i = 0; i < rowsToAdd.length; i++) {
-            this.array.push(rowsToAdd[i]);
+            this.toBack.push(rowsToAdd[i]);
+        }
+    }
+
+    pushMultToRender(rowsToAdd) {
+        for (let i = 0; i < rowsToAdd.length; i++) {
+            this.toRender.push(rowsToAdd[i]);
+        }
+    }
+
+    pushMultToDown(rowsToAdd) {
+        for (let i = 0; i < rowsToAdd.length; i++) {
+            this.toDown.push(rowsToAdd[i]);
         }
     }
 
@@ -386,15 +399,9 @@ class Graphics {
         this.toRender.push(rowToAdd);
     }
 
-    pushMultToRender(rowsToAdd) {
-        for (let i = 0; i < rowsToAdd.length; i++) {
-            this.toRender.push(rowsToAdd[i]);
-        }
-    }
-
     getLastObject() {
-        let i = this.array.length - 1;
-        return this.array[i];
+        let i = this.toBack.length - 1;
+        return this.toBack[i];
     }
 
     //removes and returns first element in the graphics array
@@ -411,8 +418,8 @@ class Graphics {
     }
 
     moveDown() {
-        for (let i = 0; i < this.array.length; i++) {
-            let row = this.array[i];
+        for (let i = 0; i < this.toBack.length; i++) {
+            let row = this.toBack[i];
             if (row[0] instanceof Rectangle || row[0] instanceof Line) {
                 for (let j = 0; j < row.length; j++) {
                     row[j].moveDown(120);
@@ -446,8 +453,8 @@ class Graphics {
 
     backAll(gameSpeed) {
         let i = 0;
-        while (i < this.array.length) {
-            let row = this.array[i];
+        while (i < this.toBack.length) {
+            let row = this.toBack[i];
             if (!(row[0] instanceof Array)) {
                 for (let j = 0; j < row.length; j++) {
                     row[j].back(gameSpeed);
@@ -465,9 +472,9 @@ class Graphics {
     }
 
     downAll(rate) {
-        let i = 1;
-        while (i < this.toRender.length - 13) {
-            let row = this.toRender[i];
+        let i = 0;
+        while (i < this.toDown.length) {
+            let row = this.toDown[i];
             if (!(row[0] instanceof Array)) {
                 for (let j = 0; j < row.length; j++) {
                     row[j].moveDown(rate);
@@ -487,7 +494,7 @@ class Graphics {
 
     forward_graphics(graphicsToForward) {
         for (let i = 2; i <= graphicsToForward.length + 1; i++) {
-            this.array[i].forward();
+            this.toBack[i].forward();
         }
     }
 

@@ -270,7 +270,7 @@ let cannon = new Sprite({
     c: canvas.getContext("2d"), 
     spriteWidth: 822, 
     spriteHeight: 657, 
-    src: 'img/cannon/cannon_sprite.png', 
+    src: 'img/cannon/cannon_sprite5.png', 
     width: width, 
     height: height, 
     centerX: rectangleWall.getLeftX() + scale(2900), //original: 2900
@@ -342,7 +342,7 @@ width = (enemyUfo.width * 84/285)/1.2;
 height = width;
 let ufoAmmo1 = new Pic({
     c: canvas.getContext("2d"), 
-    src: 'img/ufo/ufo_ammo2.png', 
+    src: 'img/ufo/ufo_ammo5.png', 
     width: width,
     height: height,
     centerX: 0,
@@ -353,6 +353,27 @@ let ufoAmmo = createArray();
 let deployedAmmo = createArray();
 let ufoAmmoTrail = createArray();
 ufoAmmo.push(ufoAmmo1);
+
+width = ((ufoAmmo1.width) * 236/34) * 1.5;
+height = ((ufoAmmo1.height) * 162/34) * 1.5;
+let explosion1 = new Sprite({
+    c: canvas.getContext("2d"), 
+    spriteWidth: 740, 
+    spriteHeight: 513, 
+    src: 'img/ufo/explosion1.png', 
+    width: width, 
+    height: height, 
+    centerX: 0,
+    centerY: 0,
+    ticksPerFrame: 6,
+    numRows: 3,
+    numColumns: 3,
+    lastRowColumns: 3,
+    speed: gameSpeed,
+    loop: false
+});
+let explosions = createArray();
+explosions.push(explosion1);
 
 
 width = scale(100);
@@ -623,8 +644,9 @@ let falling = new sound("sounds/fall1.mp3");
 let loopCelebration = new sound("sounds/celebrate3.mp3");
 let loopSound = new sound("sounds/loop1.mp3");
 let celebration = new sound("sounds/celebrate1.mp3");
+let detonation = new sound("sounds/explosion1.mp3");
 
-graphics.pushMultToArray([
+graphics.pushMultToBack([
     tunnelRow,
     triangles,
     triangleTrail,
@@ -644,7 +666,8 @@ graphics.pushMultToArray([
     loops,
     flags,
     deployedAmmo,
-    ufoAmmoTrail
+    ufoAmmoTrail,
+    explosions
 ]);
 
 graphics.pushMultToRender([
@@ -656,13 +679,17 @@ graphics.pushMultToRender([
     triangleTrail,
     deathTraps,
     deathTrapTrail,
+    ufoAmmo,
+    ufos,
+    deployedAmmo,
+    ufoAmmoTrail,
     rectangleRow,
     rectangleTrail,
     rectangleRow2,
     dartsToShoot,
     cannonRow,
-    trampos,
     rectangleWalls,
+    trampos,
     lines,
     triangleTraps,
     triTrapsTrail,
@@ -671,10 +698,22 @@ graphics.pushMultToRender([
     enemyAmmoShot,
     spaceships,
     rectangleRow3,
-    flags,
-    ufoAmmo,
-    ufos,
-    deployedAmmo,
-    ufoAmmoTrail
+    flags
 ]);
+
+graphics.pushMultToDown([
+    ball1,
+    triangles,
+    triangleTraps,
+    triangleTrail,
+    deathTraps,
+    deathTrapTrail,
+    rectangleRow,
+    rectangleTrail,
+    rectangleRow2,
+    dartsToShoot,
+    cannonRow,
+    rectangleWalls
+]);
+
 document.getElementById('screen').style.display = 'none';
