@@ -59,7 +59,7 @@ canvas {
     right:0;
     margin: auto;
     width: 20%;
-    height: 23%;
+    height: 30%;
     background-color: #00F69F;
     border-radius: 1vw;
     border: .23vw solid #0090FF;
@@ -107,9 +107,9 @@ canvas {
 
 #score {
     display: none;
-    margin-top: -1%; 
+    margin-top: 3%; 
     color: #0090FF;
-    font-size: 2vw;
+    font-size: 1.9vw;
     text-align: center;
 }
 
@@ -117,7 +117,7 @@ canvas {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 70%;
+    width: 76%;
     margin-top: 4%; 
     color: #0090FF;
     font-size: 1.7vw;

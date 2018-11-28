@@ -641,7 +641,7 @@ class Sprite extends Graphic {
         return land;
     }
 
-    hitOnGround(graphic, onWall) {
+    hitOnGround(graphic) {
         let graphicLeftX = graphic.getLeftX();
         let graphicRightX = graphic.getRightX();
         let hit;

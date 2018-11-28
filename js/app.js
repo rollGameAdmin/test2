@@ -73,7 +73,11 @@ function main() {
         addedDeployed: false,
         score: 0,
         canBounce: false,
-        movingDown: true
+        movingDown: false,
+        keyUp: false,
+        passedTunnel: false,
+        changedLine2: false,
+        triggerBounce: true
     }
 
 
@@ -419,7 +423,7 @@ function main() {
 
             global.rectangleLand = ball.landOnGraphic(rectangle, global.bouncing);
 
-            global.hitRecOnGround = ball.hitOnGround(rectangle, global.onWall);
+            global.hitRecOnGround = ball.hitOnGround(rectangle);
 
             if (global.hitRecOnGround) {
                 endGame(-1, -1);
@@ -468,7 +472,7 @@ function main() {
         }
 
         /*manage trampo bounce and wall landing*/
-        global.hitTrampoOnGround = ball.hitOnGround(trampo1, global.onWall);
+        global.hitTrampoOnGround = ball.hitOnGround(trampo1);
         if (global.hitTrampoOnGround || global.hitTri) {
             let triRow = triangles[0];
             // triRow.changeColor(colors.oceanBlue);
@@ -549,16 +553,14 @@ function main() {
                 endGame(-1, ball.initialCenterY + ballRadius);         
             }
 
-            global.hitWall = ball.hitOnGround(rectangleWall, global.onWall);
+            global.hitWall = ball.hitOnGround(rectangleWall);
             if (global.hitWall) {
                 endGame(-1,-1);
             }
 
         } else {
             global.passedWall = ball.passed(rectangleWall);
-            if (!global.passedWall) {
-                global.onWall = ball.stillOnGraphic(rectangleWall);
-            }
+            global.onWall = ball.stillOnGraphic(rectangleWall);
             if (global.passedWall) {
                 ball.initialCenterY = line.beginY - ball.height/2 - line.width/2;
             }
@@ -604,23 +606,17 @@ function main() {
             if (global.inTunnel) {
                 global.canBounce = false;
             } else {
-                if (tunnelRow[0] != tunnel && !global.gameEnd && !global.movingDown) {
-                    global.canBounce = true;
-                }
+                global.passedTunnel = true;
             }
         }
         //---//
         if (ball.getLeftX() < line2.endX + scale(100)) {
-            if (ball.centerX >= line2.beginX - scale(300) && ball.getLeftX() <= line2.endX) {
+            if (ball.centerX >= line2.beginX - scale(300) && ball.getRightX() <= line2.endX) {
                 global.canBounce = false;
-            } else if (!global.gameEnd && !global.movingDown) {
-                global.canBounce = true;
             }
         }
         if (ball.centerX >= line2.beginX) {
             if (global.changeSpeed) {
-                // backMusic.pause();
-                // loopCelebration.play();
                 gameSpeed = canvas.width * (6.1 + 9)/1305;
                 ball.ticksPerFrame = 1;
                 global.changeSpeed = false;
@@ -642,9 +638,7 @@ function main() {
                     gameSpeed = initialGameSpeed;
                     global.changeSpeedLast = false;
                     ball.ticksPerFrame = 2;
-                    if (!global.gameEnd && !global.movingDown) {
-                        global.canBounce = true;
-                    }
+                    global.canBounce = true;
                 }
             }
             if (ball.getLeftX() >= flag.getRightX() + scale(100)) {
@@ -668,7 +662,7 @@ function main() {
                 }
                 ball.initialBounceSpeedY = scale(7);
                 celebrate();
-                document.getElementById('score').innerHTML = 'Score: ' + global.score;
+                document.getElementById('score').innerHTML = 'Conquered! Nice Job! <br> Score: ' + global.score;
                 document.getElementById('screen').style.display = 'block';
             }
         }
@@ -883,7 +877,7 @@ function main() {
             explode.play();
         }
         graphics.spliceAdd(1, 1, exploded);
-        document.getElementById('score').innerHTML = 'Score: ' + global.score;
+        document.getElementById('score').innerHTML = 'Ouch! Try Again! <br> Score: ' + global.score;
         document.getElementById('screen').style.display = 'block';
     }
 
@@ -902,10 +896,12 @@ function main() {
 
         //bounce when pressing spacebar
         if (event.which === 32) {
-            if (!global.bouncing && global.canBounce && !global.celebrate) {
+            if (!global.bouncing && global.canBounce && !global.celebrate
+                && global.passedTunnel) {
                 global.rectangleLand = false;
                 ball.bounceSpeedY = ball.initialBounceSpeedY;
                 bounce();
+                global.canBounce = false;
             }
 
             if (!global.start) {
@@ -941,6 +937,14 @@ function main() {
                 global.soundsOn = true;
                 global.toggleSoundsOff = true;
                 $('#soundsButton').attr('src', "img/sounds/sounds_button1.png");
+            }
+        }
+    });
+
+    $('html').on('keyup', function (event) {
+        if (event.which === 32) {
+            if (!global.movingDown) {
+                global.canBounce = true;
             }
         }
     });
