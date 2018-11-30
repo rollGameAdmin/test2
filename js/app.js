@@ -101,14 +101,14 @@ function main() {
     }
 
     function shootFirstDart() {
-        dartsToShoot[0].speed = canvas.width * 10/1305;
+        dartsToShoot[0].speed = canvas.width * (6.7+4)/1305;
     }
 
     let shootDartsReq = 0;
     function shootDarts() {
         shootDartsReq = window.requestAnimationFrame(shootDarts);
-        if ((dartsToShoot[global.dartNum-1].endX <= cannon.getLeftX()- scale(350)) && global.dartNum < dartsToShoot.length) {
-            dartsToShoot[global.dartNum].speed = canvas.width * 10/1305;
+        if ((dartsToShoot[global.dartNum-1].endX <= cannon.getLeftX()- scale(320)) && global.dartNum < dartsToShoot.length) {
+            dartsToShoot[global.dartNum].speed = canvas.width * (6.7+4)/1305;
             global.dartNum++;
         } else if (global.dartNum == dartsToShoot.length) {
             window.cancelAnimationFrame(shootDartsReq);
@@ -586,7 +586,7 @@ function main() {
             let firstTraps = triangleTraps[0];
             global.passedTriTrap = ball.getLeftX() > firstTraps[firstTraps.lastIndex()].getRightX();
 
-            if (Math.abs(ball.getRightX() - firstTraps[0].getLeftX()) < scale(300)) {
+            if (Math.abs(ball.getRightX() - firstTraps[0].getLeftX()) < scale(250)) {
                 if (!global.revealed) {
                     global.revealed = true;
                     revealTrap();
@@ -653,7 +653,7 @@ function main() {
                 global.wallLand = false;
                 global.tunnelLand = false;
                 crownedBall.centerY = ball.centerY;
-                graphics.spliceAdd(1, 1, crowned); 
+                graphics.spliceAdd(0, 1, crowned); 
                 ball = crownedBall;
                 crownedBall.initialCenterY = rectangleTrail[rectangleTrail.lastIndex()].getTopY() - crownedBall.height/2;
                 global.playBounceSound = false;
@@ -876,7 +876,7 @@ function main() {
         if (global.soundsOn) {
             explode.play();
         }
-        graphics.spliceAdd(1, 1, exploded);
+        graphics.spliceAdd(0, 1, exploded);
         document.getElementById('score').innerHTML = 'Ouch! Try Again! <br> Score: ' + global.score;
         document.getElementById('screen').style.display = 'block';
     }

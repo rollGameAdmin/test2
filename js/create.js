@@ -1,6 +1,6 @@
 //original canvas width: 1300
 const ballRadius = scale(30); //radius of Circle
-let gameSpeed = canvas.width * 6.1/1305; //number of pixels graphics are displaced per anim frame
+let gameSpeed = canvas.width * 6.7/1305; //number of pixels graphics are displaced per anim frame
 const initialGameSpeed = gameSpeed;
 let colors = {
     darkGrey: '#273336',
@@ -274,7 +274,7 @@ let cannon = new Sprite({
     width: width, 
     height: height, 
     centerX: rectangleWall.getLeftX() + scale(2900), //original: 2900
-    centerY: rectangleWall.getTopY() - height/2 + scale(10),
+    centerY: rectangleWall.getTopY() - height/2 + scale(12),
     ticksPerFrame: 2,
     numRows: 4,
     numColumns: 5,
@@ -564,7 +564,7 @@ triangles.push(triangles3);
 
 let triangle4 = duplicateForRow(triangle1);
 repositionTriangle(triangle4, rectangleWall.getRightX() + scale(300), canvas.height + triangle4.height + scale(2));
-triangle4.spacing = scale(300);
+triangle4.spacing = scale(280);
 let triangleTraps = createArray();
 let triTrapsTrail = createArray();
 let triangles4 = createArray();
@@ -602,7 +602,7 @@ line3.beginX = rectangle3.getRightX();
 line3.endX = lastRec3.getRightX();
 lines.push(line3);
 flag.centerY = lastRec3.getTopY() - flag.height/2 - scale(10);
-flag.centerX = lastRec3.getLeftX() + scale(1800);
+flag.centerX = lastRec3.getLeftX() + scale(1400);
 flag.initialCenterX = flag.centerX;
 
 spaceship2 = duplicateForRow(spaceship1);
@@ -671,8 +671,8 @@ graphics.pushMultToBack([
 ]);
 
 graphics.pushMultToRender([
-    line1,
     ball1,
+    line1,
     tunnelRow,
     triangles,
     triangleTraps,

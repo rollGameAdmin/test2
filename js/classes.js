@@ -33,7 +33,7 @@ class Graphic {
         this.speed = details.speed; //amount of displacement per animation frame
         this.bounceSpeedY = canvas.width * 7.2/1305; //displacement of centerY when calling bounce() original: 7.2
         this.initialBounceSpeedY = this.bounceSpeedY; //initial displacement of centerY when calling bounce()
-        this.deceleration = canvas.width * .37/1305; //number to subtract from bounceSpeedY when calling bounce() original: .37
+        this.deceleration = canvas.width * .42/1305; //number to subtract from bounceSpeedY when calling bounce() original: .37
         this.bounceSpeedX = scale(5); //displacement of centerX when calling bounceForward() and bounceBack() original: 5
         this.forwardDeceleration = canvas.width * .5/1305; //number to subtract from bounceSpeedY when calling bounceForward() original: .5
         this.backDeceleration = canvas.width * .5/1305; //number to subtract from bounceSpeedY when calling bounceBack() original = .5
@@ -676,13 +676,10 @@ class Sprite extends Graphic {
         let leftX = firstTri.getLeftX();
         let rightX = lastTri.getRightX();
         let topY = firstTri.getTopY();
-        
-        let thisLeftX = this.getLeftX();
-        let thisTopY = this.getTopY();
 
         let deathLand = this.centerX >= leftX &&
-                        thisLeftX <= rightX &&
-                        this.centerY >= topY;
+                        this.getLeftX() <= rightX &&
+                        this.centerY + this.height/8 >= topY;
         return deathLand;
     }
 
